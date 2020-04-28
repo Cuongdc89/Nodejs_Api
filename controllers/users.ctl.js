@@ -1,11 +1,7 @@
 import userModel from "../models/users.model";
 import deckModel from "../models/decks.model";
 import Joi from "@hapi/joi";
-// // Đã sử dụng package express-promise-router nên ko cần trycatch khi dùng {async, await}
-
-const checkIdSchema = Joi.object().keys({
-   userID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
-});
+// Đã sử dụng package express-promise-router nên ko cần trycatch khi dùng {async, await}
 
 let newUserDeck = async (req, res) => {
    let {userID} = req.params;
@@ -35,9 +31,7 @@ let updateUser = async (req, res) => {
    return res.status(200).json({success: true});
 };
 let getUserByID = async (req, res) =>{
-   const resultValidator = checkIdSchema.validate(req.params);
-   console.log('resultValidator=', resultValidator);
-   let {userID} = req.params;
+   let {userID} = req.value.params;
    let userInfo = await userModel.findUserByID(userID);
    return res.status(200).json({userInfo});
 };

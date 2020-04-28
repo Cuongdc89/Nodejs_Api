@@ -2,13 +2,20 @@ import Joi from "@hapi/joi";
 
 const validateParams = (schema, name) => {
    return (req, res, next) => {
-      console.log('schema=  ', schema);
-      console.log('name=  ', name);
+      const validateResult = schema.validate({param: req.params[name]});
+      if(validateResult.error){
+         return res.status(400).json(validateResult.error);
+      }else{
+         if(!req.value){req.value = {}}
+         if(!req.value["params"]){req.value.params = {}}
+         req.value.params[name] = req.params[name];
+         next();
+      }
    }
-};
+}; 
 const schemas = {
    checkIdSchema: Joi.object().keys({
-      userID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+      param: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
    }),
 };
 module.exports = {
